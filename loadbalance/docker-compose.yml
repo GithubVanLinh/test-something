@@ -1,0 +1,89 @@
+version: "3.8"
+
+services:
+  server1:
+    container_name: server1
+    build:
+      context: ./server
+    ports:
+      - 3001:3000
+      - 4001:4000
+    env_file:
+      - ./1.env
+    networks:
+      - nesjs-network
+    volumes:
+      - ./server:/usr/src/app
+    depends_on:
+      adapter:
+        condition: service_healthy
+  server2:
+    container_name: server2
+    build:
+      context: ./server
+    ports:
+      - 3002:3000
+      - 4002:4000
+    env_file:
+      - ./2.env
+    networks:
+      - nesjs-network
+    volumes:
+      - ./server:/usr/src/app
+    depends_on:
+      adapter:
+        condition: service_healthy
+  server3:
+    container_name: server3
+    build:
+      context: ./server
+    ports:
+      - 3003:3000
+      - 4003:4000
+    env_file:
+      - ./3.env
+    networks:
+      - nesjs-network
+    volumes:
+      - ./server:/usr/src/app
+    depends_on:
+      adapter:
+        condition: service_healthy
+  nginx:
+    image: nginx
+    container_name: nginx
+    volumes:
+      - ./nginx/sites-available:/etc/nginx/sites-available
+      - ./nginx/sites-enable:/etc/nginx/sites-enable
+      - type: bind
+        source: ./nginx/nginx.conf
+        target: /etc/nginx/nginx.conf
+    ports:
+      - "3000:80"
+    environment:
+      - NGINX_PORT=80
+    networks:
+      - nesjs-network
+    depends_on:
+      - server1
+      - server2
+      - server3
+  adapter:
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis/dаta:/root/redis
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+    environment:
+      - REDIS_PASSWORD=my-password
+      - REDIS_PORT=6379
+      - REDIS_DATABASES=16
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+    networks:
+      - nesjs-network
+
+networks:
+  nesjs-network:
