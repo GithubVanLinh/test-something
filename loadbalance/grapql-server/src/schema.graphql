@@ -1,0 +1,23 @@
+type Book {
+  id: Int
+  title(hello: String = "hi"): String
+  author: Author
+}
+
+type Author {
+  id: Int
+  name: String
+  books: [Book]
+}
+
+type Query {
+  books: [Book]
+  book(id: Int!): Book
+  authors: [Author]
+  posts: Book
+}
+
+type Mutation {
+  addBook(title: String, author: String): Book
+  createAuthor(id: Int, name: String): Author
+}

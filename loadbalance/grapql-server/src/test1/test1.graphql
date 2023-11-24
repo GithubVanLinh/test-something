@@ -1,0 +1,24 @@
+type Test1 {
+  # Example field (placeholder)
+  exampleField: Int
+}
+
+input CreateTest1Input {
+  # Example field (placeholder)
+  exampleField: Int
+}
+
+input UpdateTest1Input {
+  id: Int!
+}
+
+type Query {
+  test1s: [Test1]!
+  test1(id: Int!): Test1
+}
+
+type Mutation {
+  createTest1(createTest1Input: CreateTest1Input!): Test1!
+  updateTest1(updateTest1Input: UpdateTest1Input!): Test1!
+  removeTest1(id: Int!): Test1
+}

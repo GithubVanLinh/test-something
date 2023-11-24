@@ -6,7 +6,14 @@ export class AppController {
   constructor(private readonly appService: AppService) {}
 
   @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  async getHello() {
+    console.log(time(new Date()), 'new quest');
+    const res = await this.appService.getHello();
+    console.log(time(new Date()), 'done');
+    return res;
   }
+}
+
+function time(date: Date) {
+  return date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
 }
